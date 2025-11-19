@@ -91,3 +91,18 @@ export const updateProduct = async (req: Request<{ _id: string }, {}, Partial<Cr
 
     res.json(updated);
 }
+
+
+//increase stock
+export const increaseStock = async (req: Request<{ _id: string }, {}, { amount: number }>, res: Response) => {
+    const product = await Product.findById(req.params._id);
+    if (product) {
+        product.stock += req.body.amount;
+        await product.save();
+    }
+    if (!product) return res.status(404).json({ message: "product not found" });
+
+    res.json(product);
+}
+
+
