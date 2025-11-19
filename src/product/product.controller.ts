@@ -1,9 +1,8 @@
-import Book from "./book.model";
+import Product from "./product.schema";
 import { Request, Response } from "express";
 
-export interface CreateBookDto {
+export interface CreateProductDto {
     title: string;
-    author: string;
     price: number;
     stock: number;
     category?: string;
@@ -16,30 +15,30 @@ export const create = async (req: Request, res: Response) => {
     if (!title || !author || !price || !stock) {
         return res.status(400).json({ message: "Title, author, price, and stock are required." });
     }
-    const book = await Book.create(req.body);
-    res.status(201).json(book);
+    const product = await Product.create(req.body);
+    res.status(201).json(product);
 }
 
 //step2
 
-// export const create = async (req: Request<{}, {}, CreateBookDto>, res: Response) => {
+// export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
 //     try {
 //         const { title, author, price, stock, category } = req.body
 //         if (!title || !author || !price || !stock) {
 //             return res.status(400).json({ message: "Title, author, price, and stock are required." });
 //         }
-//         const book = await Book.create(req.body)
-//         res.status(201).json(book);
+//         const product = await Product.create(req.body)
+//         res.status(201).json(product);
 //     } catch (error) {
 //         res.status(500).json({ message: "Internal server error." });
 //     }
 // }
 
 //step 3
-// export const create = async (req: Request<{}, {}, CreateBookDto>, res: Response) => {
+// export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
 //     try {
-//         const book = await Book.create(req.body)
-//         res.status(201).json(book);
+//         const product = await Product.create(req.body)
+//         res.status(201).json(product);
 
 //     } catch (error) {
 //         res.status(500).json({ message: "Internal server error." });
@@ -48,35 +47,35 @@ export const create = async (req: Request, res: Response) => {
 
 
 export const getAll = async (req: Request, res: Response) => {
-    const books = await Book.find();
-    res.status(200).json(books);
+    const products = await Product.find();
+    res.status(200).json(products);
 }
 
 
 export const getById = async (req: Request<{ id: string }>, res: Response) => {
     const { id } = req.params;
-    const book = await Book.findById(id);
-    if (!book) {
-        return res.status(404).json({ message: "Book not found." });
+    const product = await Product.findById(id);
+    if (!product) {
+        return res.status(404).json({ message: "product not found." });
     }
-    res.status(200).json(book);
+    res.status(200).json(product);
 }
 
-export const deleteBook = async (req: Request<{ _id: string }>, res: Response) => {
-    const deleted = await Book.findById(req.params._id);
+export const deleteProduct = async (req: Request<{ _id: string }>, res: Response) => {
+    const deleted = await Product.findById(req.params._id);
 
     if (deleted) {
-        await Book.deleteOne({ _id: req.params._id });
+        await Product.deleteOne({ _id: req.params._id });
     }
 
-    if (!deleted) return res.status(404).json({ message: "Book not found" });
+    if (!deleted) return res.status(404).json({ message: "product not found" });
 
     res.json({ message: "Deleted successfully" });
 }
 
 
-export const updateBook = async (req: Request<{ _id: string }, {}, Partial<CreateBookDto>>, res: Response) => {
-    const updated = await Book.findById(req.params._id);
+export const updateProduct = async (req: Request<{ _id: string }, {}, Partial<CreateProductDto>>, res: Response) => {
+    const updated = await Product.findById(req.params._id);
     if (updated) {
         // updated.title = req.body.title || updated.title;
         // updated.author = req.body.author || updated.author;
@@ -88,7 +87,7 @@ export const updateBook = async (req: Request<{ _id: string }, {}, Partial<Creat
         await updated.save();
     }
 
-    if (!updated) return res.status(404).json({ message: "Book not found" });
+    if (!updated) return res.status(404).json({ message: "product not found" });
 
     res.json(updated);
 }
