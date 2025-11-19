@@ -7,3 +7,7 @@ export const CreateProductSchema = z.object({
     stock: z.number().min(0),
     category: z.string().optional()
 });
+
+export const StockAmountSchema = z.object({
+    amount: z.number().min(1)
+});
