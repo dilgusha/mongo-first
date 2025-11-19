@@ -91,3 +91,45 @@ export const updateProduct = async (req: Request<{ _id: string }, {}, Partial<Cr
 
     res.json(updated);
 }
+
+export const increaseStock = async (req: Request<{ id: string }, {}, { amount: number }>, res: Response) => {
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+        return res.status(400).json({ message: "Amount must be a positive number." });
+    }
+
+    const product = await Product.findById(id);
+    if (!product) {
+        return res.status(404).json({ message: "Product not found." });
+    }
+
+    product.stock += amount;
+    await product.save();
+
+    res.status(200).json(product);
+}
+
+export const decreaseStock = async (req: Request<{ id: string }, {}, { amount: number }>, res: Response) => {
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+        return res.status(400).json({ message: "Amount must be a positive number." });
+    }
+
+    const product = await Product.findById(id);
+    if (!product) {
+        return res.status(404).json({ message: "Product not found." });
+    }
+
+    if (product.stock < amount) {
+        return res.status(400).json({ message: "Insufficient stock." });
+    }
+
+    product.stock -= amount;
+    await product.save();
+
+    res.status(200).json(product);
+}
