@@ -21,18 +21,18 @@ export const create = async (req: Request, res: Response) => {
 
 //step2
 
-export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
-    try {
-        const { title, author, price, stock, category } = req.body
-        if (!title || !author || !price || !stock) {
-            return res.status(400).json({ message: "Title, author, price, and stock are required." });
-        }
-        const product = await Product.create(req.body)
-        res.status(201).json(product);
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error." });
-    }
-}
+// export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
+//     try {
+//         const { title, author, price, stock, category } = req.body
+//         if (!title || !author || !price || !stock) {
+//             return res.status(400).json({ message: "Title, author, price, and stock are required." });
+//         }
+//         const product = await Product.create(req.body)
+//         res.status(201).json(product);
+//     } catch (error) {
+//         res.status(500).json({ message: "Internal server error." });
+//     }
+// }
 
 //step 3
 // export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
@@ -94,15 +94,43 @@ export const updateProduct = async (req: Request<{ _id: string }, {}, Partial<Cr
 
 
 //increase stock
-export const increaseStock = async (req: Request<{ _id: string }, {}, { amount: number }>, res: Response) => {
-    const product = await Product.findById(req.params._id);
-    if (product) {
-        product.stock += req.body.amount;
-        await product.save();
-    }
+// export const increaseStock = async (req: Request<{ _id: string }, {}, { amount: number }>, res: Response) => {
+//     const product = await Product.findById(req.params._id);
+//     if (product) {
+//         product.stock += req.body.amount;
+//         await product.save();
+//     }
+//     if (!product) return res.status(404).json({ message: "product not found" });
+
+//     res.json(product);
+// }
+
+
+
+
+export const increaseStock = async (req: Request<{ id: string},{},{amount: number}>, res: Response) => {
+    const product = await Product.findById(req.params.id);
+    const amount =  req.body.amount
     if (!product) return res.status(404).json({ message: "product not found" });
 
-    res.json(product);
-}
+    product.stock += amount;
+    await product.save();
 
+    res.json(product);
+};
+
+export const decreaseStock = async (req: Request<{ id: string},{},{amount:number}>, res: Response) => {
+    const product = await Product.findById(req.params.id);
+    const amount = req.body.amount
+    if (!product) return res.status(404).json({ message: "product not found" });
+
+    if (product.stock === 0) {
+        return res.status(400).json({ message: "stock cannot be negative" });
+    }
+
+    product.stock -= amount;
+    await product.save();
+
+    res.json(product);
+};
 
