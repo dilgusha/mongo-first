@@ -91,3 +91,30 @@ export const updateProduct = async (req: Request<{ _id: string }, {}, Partial<Cr
 
     res.json(updated);
 }
+
+export const increaseStock = async (req: Request<{ id: string},{},{amount: number}>, res: Response) => {
+    const product = await Product.findById(req.params.id);
+    const amount =  req.body.amount
+    if (!product) return res.status(404).json({ message: "product not found" });
+
+    product.stock += amount;
+    await product.save();
+
+    res.json(product);
+};
+
+export const decreaseStock = async (req: Request<{ id: string},{},{amount:number}>, res: Response) => {
+    const product = await Product.findById(req.params.id);
+    const amount = req.body.amount
+    if (!product) return res.status(404).json({ message: "product not found" });
+
+    if (product.stock === 0) {
+        return res.status(400).json({ message: "stock cannot be negative" });
+    }
+
+    product.stock -= amount;
+    await product.save();
+
+    res.json(product);
+};
+
