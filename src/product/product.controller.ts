@@ -21,18 +21,18 @@ export const create = async (req: Request, res: Response) => {
 
 //step2
 
-// export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
-//     try {
-//         const { title, author, price, stock, category } = req.body
-//         if (!title || !author || !price || !stock) {
-//             return res.status(400).json({ message: "Title, author, price, and stock are required." });
-//         }
-//         const product = await Product.create(req.body)
-//         res.status(201).json(product);
-//     } catch (error) {
-//         res.status(500).json({ message: "Internal server error." });
-//     }
-// }
+export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
+    try {
+        const { title, author, price, stock, category } = req.body
+        if (!title || !author || !price || !stock) {
+            return res.status(400).json({ message: "Title, author, price, and stock are required." });
+        }
+        const product = await Product.create(req.body)
+        res.status(201).json(product);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error." });
+    }
+}
 
 //step 3
 // export const create = async (req: Request<{}, {}, CreateProductDto>, res: Response) => {
