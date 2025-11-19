@@ -8,16 +8,7 @@ export interface CreateProductDto {
     category?: string;
 }
 
-//step1
 
-export const create = async (req: Request, res: Response) => {
-    const { title, author, price, stock } = req.body;
-    if (!title || !author || !price || !stock) {
-        return res.status(400).json({ message: "Title, author, price, and stock are required." });
-    }
-    const product = await Product.create(req.body);
-    res.status(201).json(product);
-}
 
 //step2
 
