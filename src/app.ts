@@ -7,6 +7,7 @@ import { connect } from 'http2';
 import userRouter from './user/user.route';
 import { createUser } from './user/user.controller';
 import { connectDb } from './config/db';
+import categoryRoute from './category/category.route';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userRouter)
-// app.post('/user/create', createUser)
+app.use('/product', productRouter)
+app.use('/category', categoryRoute)
 
 export default app;
